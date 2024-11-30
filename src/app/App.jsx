@@ -1,7 +1,7 @@
 // src/App.jsx
 import { DiscordContextProvider } from '../hooks/useDiscordSdk';
-import { TierList } from './components/TierList.jsx'; // Import the TierList component
 import './App.css';
+import TierList from './components/TierList.jsx'
 
 /**
  * Set `authenticate` to true to enable Discord authentication.

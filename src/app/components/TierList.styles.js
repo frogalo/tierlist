@@ -1,3 +1,4 @@
+
 // src/components/TierList.styles.js
 import styled from 'styled-components';
 
@@ -5,10 +6,6 @@ export const TierListWrapper = styled.div`
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
-`;
-
-export const TierHeader = styled.div`
-    margin-bottom: 20px;
 `;
 
 export const TierHeaderItem = styled.div`
@@ -19,33 +16,45 @@ export const TierHeaderItem = styled.div`
     text-transform: uppercase;
     min-width: 50px;
     text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
 export const TiersWrapper = styled.div`
     display: flex;
-    flex-direction: column; /* Vertical align the tiers */
+    flex-direction: row; /* Horizontally align the tiers */
     justify-content: center;
     gap: 30px;
 `;
 
 export const TierContent = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    width: 80%;
-`;
-
-export const TierListItem = styled.li`
-    margin: 5px 10px;  /* Adjust spacing between items */
-    text-align: center;  /* Center-align the items inside the list */
-    list-style-type: none;
-    padding: 5px;
+    width: 100%;
 `;
 
 export const TierListItems = styled.ul`
-    display: flex;  /* Flex container for items */
-    gap: 10px;  /* Space between items */
-    padding: 0;  /* Remove default padding */
-    margin: 0;  /* Remove default margin */
-    list-style-type: none;  /* Remove default list bullets */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    width: 100%;
+`;
+
+export const TierListItem = styled.li`
+    margin: 5px 10px;
+    text-align: center;
+    list-style-type: none;
+    padding: 10px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+
+    &:active {
+        transform: scale(0.98);
+    }
 `;

@@ -1,7 +1,9 @@
 // src/App.jsx
 import { DiscordContextProvider } from '../hooks/useDiscordSdk';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import routing components
 import { TierList } from './components/TierList.jsx'
+import Home from './components/Home.jsx' // TierList component
 
 /**
  * Set `authenticate` to true to enable Discord authentication.
@@ -18,8 +20,16 @@ import { TierList } from './components/TierList.jsx'
  */
 export default function App() {
 	return (
-		<DiscordContextProvider>
-			<TierList /> {/* Render the TierList component */}
+		<DiscordContextProvider authenticate scope={['identify', 'guilds']}>
+			<Router>
+				<Routes>
+					{/* Route to the home page where all tier lists are displayed */}
+					<Route path="/" element={<Home />} />
+
+					{/* Dynamic route to view individual tier lists */}
+					<Route path="/tierlist/:id" element={<TierList />} />
+				</Routes>
+			</Router>
 		</DiscordContextProvider>
 	);
 }

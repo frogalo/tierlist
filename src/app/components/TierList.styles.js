@@ -17,6 +17,7 @@ export const TierHeaderItem = styled.div`
     min-width: 50px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 8px;
 `;
 
 export const TiersWrapper = styled.div`
@@ -24,6 +25,8 @@ export const TiersWrapper = styled.div`
     flex-direction: column; /* Horizontally align the tiers */
     justify-content: center;
     gap: 30px;
+  
+ 
 `;
 
 export const TierContent = styled.div`
@@ -31,6 +34,7 @@ export const TierContent = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
+		
 `;
 
 export const TierListItems = styled.ul`
@@ -41,11 +45,15 @@ export const TierListItems = styled.ul`
     margin: 0;
     list-style-type: none;
     width: 100%;
+    min-width: 800px;  /* Ensures a minimum width of 800px */
+    background-color: #1a1a17;
+		border-radius: 15px;
+		height: 60px;
 `;
 
 export const TierListItem = styled.li`
     margin: 5px 10px;
-    text-align: center;
+    text-align: left;
     list-style-type: none;
     padding: 10px;
     background: #fff;

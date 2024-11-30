@@ -86,3 +86,43 @@ button:focus-visible {
 		background-color: #f9f9f9;
 	}
 }
+/* TIERLIST */
+
+.tier-list {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	padding: 20px;
+}
+
+.tiers {
+	display: flex;
+	flex-direction: column; /* Make the list vertical */
+	align-items: center;
+	gap: 15px;
+}
+
+.tier {
+	width: 80%; /* Take up most of the container's width */
+	padding: 10px;
+	border-radius: 10px;
+	margin: 5px 0;
+}
+
+.tier h3 {
+	margin: 0;
+	color: #fff; /* White text on colored background */
+}
+
+.tier ul {
+	list-style-type: none;
+	padding: 0;
+	margin-top: 10px;
+}
+
+.tier li {
+	background-color: #fff;
+	border-radius: 4px;
+	margin: 5px 0;
+	padding: 5px;
+	text-align: left;
+}

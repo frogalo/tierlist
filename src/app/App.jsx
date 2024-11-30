@@ -1,6 +1,7 @@
-import { DiscordContextProvider } from '../hooks/useDiscordSdk'
-import { Activity } from './Activity'
-import './App.css'
+// src/App.jsx
+import { DiscordContextProvider } from '../hooks/useDiscordSdk';
+import { TierList } from './components/TierList.jsx'; // Import the TierList component
+import './App.css';
 
 /**
  * Set `authenticate` to true to enable Discord authentication.
@@ -11,14 +12,14 @@ import './App.css'
  *  <Activity />
  * </DiscordContextProvider>
  * ```
- * 
+ *
  * Learn more:
  * https://robojs.dev/discord-activities/authentication
  */
 export default function App() {
 	return (
 		<DiscordContextProvider>
-			<Activity />
+			<TierList /> {/* Render the TierList component */}
 		</DiscordContextProvider>
-	)
+	);
 }

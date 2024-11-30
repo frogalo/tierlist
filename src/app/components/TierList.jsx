@@ -1,147 +1,25 @@
 // src/components/TierList.jsx
-import React, { Component } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useEffect, useState } from 'react';
+import {
+	TierListWrapper,
+	TierHeaderItem,
+	TiersWrapper,
+	TierContent,
+	TierListItem,
+	TierListItems
+} from './TierList.styles';
+import { useDiscordSdk } from '../../hooks/useDiscordSdk.jsx';
 
-// Fake data generator for tier items
-const getTierItems = () => ({
-	S: ['Item 1', 'Item 2'],
-	A: ['Item 3', 'Item 4', 'Item 5'],
-	B: ['Item 6'],
-	C: ['Item 7', 'Item 8'],
-	F: [],
-});
+export const TierList = () => {
+	const [tiers, setTiers] = useState({
+		S: ['Item 1', 'Item 2', 'Item 3'],
+		A: ['Item 4', 'Item 5'],
+		B: ['Item 6'],
+		C: [],
+		F: ['Item 7']
+	});
 
-// Function to reorder items in the same tier
-const reorder = (list, startIndex, endIndex) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-	return result;
-};
-
-// Function to move items between tiers
-const move = (source, destination, droppableSource, droppableDestination) => {
-	const sourceClone = Array.from(source);
-	const destClone = Array.from(destination);
-	const [removed] = sourceClone.splice(droppableSource.index, 1);
-	destClone.splice(droppableDestination.index, 0, removed);
-
-	return {
-		source: sourceClone,
-		destination: destClone,
-	};
-};
-
-const grid = 8;
-
-// Styles for items and list
-const getItemStyle = (isDragging, draggableStyle) => ({
-	userSelect: 'none',
-	padding: grid * 2,
-	margin: `0 ${grid}px 0 0`,
-	background: isDragging ? 'lightgreen' : 'lightgrey',
-	...draggableStyle,
-});
-
-const getListStyle = isDraggingOver => ({
-	background: isDraggingOver ? 'lightblue' : 'lightgrey',
-	padding: grid,
-	width: 250,
-	minHeight: 100,
-});
-
-// TierList Component
-class TierList extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			tiers: getTierItems(),
-		};
-		this.onDragEnd = this.onDragEnd.bind(this);
-	}
-
-	onDragEnd(result) {
-		const { source, destination } = result;
-
-		// Drop outside the list or in the same position
-		if (!destination) {
-			return;
-		}
-
-		const { source: sourceTier, destination: destinationTier } = result;
-
-		// Handle moving within the same tier
-		if (sourceTier === destinationTier) {
-			const items = reorder(
-				this.state.tiers[sourceTier],
-				source.index,
-				destination.index
-			);
-			const tiers = { ...this.state.tiers, [sourceTier]: items };
-			this.setState({ tiers });
-		} else {
-			// Move items between different tiers
-			const { source: sourceItems, destination: destinationItems } = move(
-				this.state.tiers[sourceTier],
-				this.state.tiers[destinationTier],
-				source,
-				destination
-			);
-			const tiers = {
-				...this.state.tiers,
-				[sourceTier]: sourceItems,
-				[destinationTier]: destinationItems,
-			};
-			this.setState({ tiers });
-		}
-	}
-
-	render() {
-		const { tiers } = this.state;
-		return (
-			<DragDropContext onDragEnd={this.onDragEnd}>
-				<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-					{Object.keys(tiers).map(tier => (
-						<Droppable key={tier} droppableId={tier}>
-							{(provided, snapshot) => (
-								<div
-									{...provided.droppableProps}
-									ref={provided.innerRef}
-									style={{
-										...getListStyle(snapshot.isDraggingOver),
-										backgroundColor: this.getTierColor(tier),
-									}}
-								>
-									<h3>{tier}</h3>
-									{tiers[tier].map((item, index) => (
-										<Draggable key={item} draggableId={item} index={index}>
-											{(provided, snapshot) => (
-												<div
-													ref={provided.innerRef}
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													style={getItemStyle(
-														snapshot.isDragging,
-														provided.draggableProps.style
-													)}
-												>
-													{item}
-												</div>
-											)}
-										</Draggable>
-									))}
-									{provided.placeholder}
-								</div>
-							)}
-						</Droppable>
-					))}
-				</div>
-			</DragDropContext>
-		);
-	}
-
-	// Helper function to get background color for each tier
-	getTierColor(tier) {
+	const getTierColor = (tier) => {
 		switch (tier) {
 			case 'S':
 				return '#ff7f7f';
@@ -156,7 +34,79 @@ class TierList extends Component {
 			default:
 				return 'transparent';
 		}
-	}
-}
+	};
 
-export default TierList;
+	const { authenticated, discordSdk, status } = useDiscordSdk();
+	const [channelName, setChannelName] = useState();
+
+	useEffect(() => {
+		if (!authenticated || !discordSdk.channelId || !discordSdk.guildId) {
+			return;
+		}
+
+		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId }).then((channel) => {
+			if (channel.name) {
+				setChannelName(channel.name);
+			}
+		});
+		console.log(channelName);
+	}, [authenticated, discordSdk]);
+
+	// Handling the drag events
+	const handleDragStart = (event, tier, index) => {
+		// Store the dragged item information
+		event.dataTransfer.setData('tier', tier);
+		event.dataTransfer.setData('index', index);
+		event.target.style.opacity = '0.5'; // Optional: visual feedback when dragging
+	};
+
+	const handleDragEnd = (event) => {
+		event.target.style.opacity = '1'; // Reset the visual feedback after drag
+	};
+
+	const handleDrop = (event, targetTier) => {
+		const sourceTier = event.dataTransfer.getData('tier');
+		const sourceIndex = event.dataTransfer.getData('index');
+		const targetIndex = event.target.dataset.index;
+
+		// Move item from source tier to target tier
+		const newTiers = { ...tiers };
+		const movedItem = newTiers[sourceTier].splice(sourceIndex, 1)[0];
+		newTiers[targetTier].splice(targetIndex, 0, movedItem);
+		setTiers(newTiers);
+	};
+
+	const handleDragOver = (event) => {
+		event.preventDefault(); // Allow the drop
+	};
+
+	return (
+		<TierListWrapper>
+			<h3>{status}</h3>
+			<h2>Tier List</h2>
+			<TiersWrapper>
+				{Object.keys(tiers).map((tier) => (
+					<TierContent key={tier}>
+						<TierHeaderItem style={{ backgroundColor: getTierColor(tier) }}>{tier}</TierHeaderItem>
+						<TierListItems
+							onDragOver={handleDragOver}
+							onDrop={(e) => handleDrop(e, tier)}
+						>
+							{tiers[tier].map((item, index) => (
+								<TierListItem
+									key={index}
+									draggable
+									onDragStart={(e) => handleDragStart(e, tier, index)}
+									onDragEnd={handleDragEnd}
+									data-index={index}
+								>
+									{item}
+								</TierListItem>
+							))}
+						</TierListItems>
+					</TierContent>
+				))}
+			</TiersWrapper>
+		</TierListWrapper>
+	);
+};

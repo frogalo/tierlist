@@ -21,21 +21,21 @@ export const TierHeaderItem = styled.div`
 
 export const TiersWrapper = styled.div`
     display: flex;
-    flex-direction: row; /* Horizontally align the tiers */
+    flex-direction: column; /* Horizontally align the tiers */
     justify-content: center;
     gap: 30px;
 `;
 
 export const TierContent = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     width: 100%;
 `;
 
 export const TierListItems = styled.ul`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     padding: 0;
     margin: 0;

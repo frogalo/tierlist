@@ -19,7 +19,7 @@ const AddTierList = () => {
 
 		try {
 			console.log('Sending:', { name: tierListName, guild_id });
-			await axios.post('/api/tierlist', { name: tierListName, guild_id: guild_id })
+			await axios.post('/api/tierList/create', { name: tierListName, guild_id: guild_id })
 			navigate('/') // Redirect to the home page after successful submission
 		} catch (error) {
 			console.error('Error adding tier list:', error)

@@ -13,6 +13,7 @@ import { useDiscordSdk } from '../../hooks/useDiscordSdk.jsx';
 
 export const TierList = () => {
 	const { id } = useParams(); // Get the ID from URL parameters
+
 	const [tiers, setTiers] = useState({
 		S: ['Item 1', 'Item 2', 'Item 3'],
 		A: ['Item 4', 'Item 5'],
@@ -65,8 +66,7 @@ export const TierList = () => {
 
 	return (
 		<TierListWrapper>
-			<h3>{status}</h3>
-			<h2>Tier List #{id}</h2> {/* Display the tier list ID */}
+			<h2>Tier List #{name}</h2> {/* Display the tier list ID */}
 			<TiersWrapper>
 				{Object.keys(tiers).map((tier) => (
 					<TierContent key={tier}>

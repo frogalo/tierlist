@@ -7,7 +7,7 @@ export const Container = styled.div`
 
 export const Header = styled.h1`
     font-size: 2rem;
-    color: #333;
+    color: #ffffff;
 `;
 
 export const TierListItem = styled.div`

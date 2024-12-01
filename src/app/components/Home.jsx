@@ -2,8 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import {
+	Wrapper,
 	AddButton,
-	Container,
 	Header,
 	TierListContainer,
 	TierListItem,
@@ -18,7 +18,7 @@ const Home = () => {
 	useEffect(() => {
 		const fetchTierLists = async () => {
 			try {
-				const response = await axios.get('https://tier-list-rust.vercel.app/api/tierList/getAll');
+				const response = await axios.get('api/tierList/getAll');
 				setTierLists(response.data.data);
 			} catch (error) {
 				console.error('Error fetching tier lists:', error);
@@ -34,7 +34,7 @@ const Home = () => {
 	}, []); // Empty dependency array to run the effect once on mount
 
 	return (
-		<div>
+		<Wrapper>
 			<Header>Guild Tier Lists</Header>
 			<TierListContainer>
 				{tierLists.length === 0 ? (
@@ -50,7 +50,7 @@ const Home = () => {
 				)}
 			</TierListContainer>
 			<AddButton onClick={() => navigate('/add-tierlist')}>Add New Tier List</AddButton>
-		</div>
+		</Wrapper>
 	);
 };
 

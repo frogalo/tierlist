@@ -18,7 +18,7 @@ const Home = () => {
 	useEffect(() => {
 		const fetchTierLists = async () => {
 			try {
-				const response = await axios.get('/api/tierList/getAll');
+				const response = await axios.get('https://tier-list-rust.vercel.app/api/tierList/getAll');
 				setTierLists(response.data.data);
 			} catch (error) {
 				console.error('Error fetching tier lists:', error);

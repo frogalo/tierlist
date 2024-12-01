@@ -1,5 +1,3 @@
-
-// src/components/TierList.styles.js
 import styled from 'styled-components';
 
 export const TierListWrapper = styled.div`
@@ -22,11 +20,9 @@ export const TierHeaderItem = styled.div`
 
 export const TiersWrapper = styled.div`
     display: flex;
-    flex-direction: column; /* Horizontally align the tiers */
+    flex-direction: column;
     justify-content: center;
     gap: 30px;
-  
- 
 `;
 
 export const TierContent = styled.div`
@@ -34,7 +30,6 @@ export const TierContent = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
-		
 `;
 
 export const TierListItems = styled.ul`
@@ -45,10 +40,10 @@ export const TierListItems = styled.ul`
     margin: 0;
     list-style-type: none;
     width: 100%;
-    min-width: 800px;  /* Ensures a minimum width of 800px */
+    min-width: 800px;
     background-color: #1a1a17;
-		border-radius: 15px;
-		height: 60px;
+    border-radius: 15px;
+    height: 60px;
 `;
 
 export const TierListItem = styled.li`
@@ -61,6 +56,38 @@ export const TierListItem = styled.li`
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s ease, background 0.2s ease;
+
+    &:active {
+        transform: scale(0.98);
+    }
+`;
+
+export const ButtonsWrapper = styled.div`
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+`;
+
+export const InputWrapper = styled.div`
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+`;
+
+export const Button = styled.button`
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #0056b3;
+    }
 
     &:active {
         transform: scale(0.98);

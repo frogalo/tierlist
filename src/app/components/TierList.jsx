@@ -1,112 +1,138 @@
-// src/components/TierList.jsx
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams to get the ID from URL
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 import {
 	TierListWrapper,
 	TierHeaderItem,
 	TiersWrapper,
 	TierContent,
 	TierListItem,
-	TierListItems
-} from './TierList.styles';
-import { useDiscordSdk } from '../../hooks/useDiscordSdk.jsx';
+	TierListItems,
+	ButtonsWrapper,
+	InputWrapper,
+	Button,
+} from './TierList.styles'
 
 export const TierList = () => {
-	const { id } = useParams(); // Get the ID from URL parameters
-
+	const { id } = useParams()
+	const [tierList, setTierList] = useState(null)
 	const [tiers, setTiers] = useState({
-		S: ['Item 1', 'Item 2', 'Item 3'],
-		A: ['Item 4', 'Item 5'],
-		B: ['Item 6'],
+		S: [],
+		A: [],
+		B: [],
 		C: [],
-		F: ['Item 7']
-	});
-
-	const { authenticated, discordSdk, status } = useDiscordSdk();
-	const [channelName, setChannelName] = useState();
+		F: [],
+		NEW: [], // Add NEW tier
+	})
+	const [newItem, setNewItem] = useState(false) // Track if new item input is shown
+	const [itemName, setItemName] = useState('')
+	const [selectedTier, setSelectedTier] = useState('NEW') // Default to 'NEW' tier
 
 	useEffect(() => {
-		if (!authenticated || !discordSdk.channelId || !discordSdk.guildId) {
-			return;
+		fetchTierList(id) // Call the function here
+	}, [id]) // Re-fetch when the id changes
+
+	// Fetch the tier list from the API
+	const fetchTierList = async (tierListId) => {
+		try {
+			const response = await axios.get(`/api/tierList/${tierListId}`)
+			setTierList(response.data.data)
+
+			const newTiers = { S: [], A: [], B: [], C: [], F: [], NEW: [] }
+			response.data.data.items.forEach((item) => {
+				if (newTiers[item.tier]) {
+					newTiers[item.tier].push(item)
+				}
+			})
+			setTiers(newTiers)
+		} catch (error) {
+			console.error('Error fetching tier list:', error)
 		}
+	}
 
-		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId }).then((channel) => {
-			if (channel.name) {
-				setChannelName(channel.name);
+	// Handle showing input for a new item
+	const toggleNewItemInput = () => {
+		setNewItem((prev) => !prev)
+		setItemName('') // Clear previous input
+	}
+
+	// Handle adding the new item
+	const handleAddItem = async () => {
+		try {
+			if (!itemName) return
+
+			const response = await axios.post('/api/tierListItem/create', {
+				name: itemName,
+				tier: selectedTier,
+				tierListId: tierList._id
+			})
+
+			if (response.status === 201) {
+				const newItem = response.data.data
+				setTiers((prevTiers) => ({
+					...prevTiers,
+					[selectedTier]: [...prevTiers[selectedTier], newItem]
+				}))
+				setNewItem(false) // Hide input after adding
+				setItemName('') // Reset input field
 			}
-		});
-	}, [authenticated, discordSdk]);
-
-	// Handling the drag events
-	const handleDragStart = (event, tier, index) => {
-		event.dataTransfer.setData('tier', tier);
-		event.dataTransfer.setData('index', index);
-		event.target.style.opacity = '0.5';
-	};
-
-	const handleDragEnd = (event) => {
-		event.target.style.opacity = '1';
-	};
-
-	const handleDrop = (event, targetTier) => {
-		const sourceTier = event.dataTransfer.getData('tier');
-		const sourceIndex = event.dataTransfer.getData('index');
-		const targetIndex = event.target.dataset.index;
-
-		// Move item from source tier to target tier
-		const newTiers = { ...tiers };
-		const movedItem = newTiers[sourceTier].splice(sourceIndex, 1)[0];
-		newTiers[targetTier].splice(targetIndex, 0, movedItem);
-		setTiers(newTiers);
-	};
-
-	const handleDragOver = (event) => {
-		event.preventDefault();
-	};
+		} catch (error) {
+			console.error('Error adding item:', error)
+		}
+	}
 
 	return (
 		<TierListWrapper>
-			<h2>Tier List #{name}</h2> {/* Display the tier list ID */}
+			<h2>Tier List #{tierList?.name}</h2>
+
 			<TiersWrapper>
 				{Object.keys(tiers).map((tier) => (
 					<TierContent key={tier}>
 						<TierHeaderItem style={{ backgroundColor: getTierColor(tier) }}>
 							{tier}
 						</TierHeaderItem>
-						<TierListItems onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, tier)}>
-							{tiers[tier].map((item, index) => (
-								<TierListItem
-									key={index}
-									draggable
-									onDragStart={(e) => handleDragStart(e, tier, index)}
-									onDragEnd={handleDragEnd}
-									data-index={index}
-								>
-									{item}
-								</TierListItem>
+						<TierListItems>
+							{tiers[tier].map((item) => (
+								<TierListItem key={item._id}>{item.name}</TierListItem>
 							))}
 						</TierListItems>
 					</TierContent>
 				))}
 			</TiersWrapper>
-		</TierListWrapper>
-	);
-};
 
-// Function to get tier color (same as before)
+			<ButtonsWrapper>
+				<Button onClick={toggleNewItemInput}>{newItem ? 'Cancel' : 'Add Item'}</Button>
+				{newItem && (
+					<InputWrapper>
+						<input
+							type="text"
+							value={itemName}
+							onChange={(e) => setItemName(e.target.value)}
+							placeholder="Enter item name"
+						/>
+						<Button onClick={handleAddItem}>Add</Button>
+					</InputWrapper>
+				)}
+			</ButtonsWrapper>
+		</TierListWrapper>
+	)
+}
+
 const getTierColor = (tier) => {
 	switch (tier) {
 		case 'S':
-			return '#ff7f7f';
+			return '#ff7f7f'
 		case 'A':
-			return '#ffbf7f';
+			return '#ffbf7f'
 		case 'B':
-			return '#ffdf7f';
+			return '#ffdf7f'
 		case 'C':
-			return '#ffff7f';
+			return '#ffff7f'
 		case 'F':
-			return '#bfff7f';
+			return '#bfff7f'
+		case 'NEW':
+			return '#e0e0e0' // Default color for NEW tier
 		default:
-			return 'transparent';
+			return 'transparent'
 	}
-};
+}

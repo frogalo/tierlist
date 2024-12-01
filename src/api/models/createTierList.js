@@ -4,7 +4,7 @@
 // const createTierListWithItems = async () => {
 // 	try {
 // 		// Create a TierList
-// 		const tierList = await TierList.create({ name: 'My First Tier List' })
+// 		const tierList = await TierList.create({ name: 'My First Tier List', guild_id: 'test' })
 //
 // 		// Create Items and associate them with the TierList
 // 		const item1 = await Item.create({

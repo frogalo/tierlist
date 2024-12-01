@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
 	},
 	source: {
 		type: String,
-		required: true
+		required: false
 	},
 	tierList: {
 		type: mongoose.Schema.Types.ObjectId,

@@ -4,16 +4,20 @@ const tierListSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
-		unique: true,
+		unique: true
 	},
 	items: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Item',
-		},
+			ref: 'Item'
+		}
 	],
-});
+	guild_id: {
+		type: String,
+		required: true
+	}
+})
 
-const TierList = mongoose.model('TierList', tierListSchema);
+const TierList = mongoose.model('TierList', tierListSchema)
 
-export default TierList;
+export default TierList

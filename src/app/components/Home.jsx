@@ -1,41 +1,50 @@
-// src/pages/Home.jsx
-import { Link } from 'react-router-dom' // Link to navigate to individual tier lists
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-// import Modal from './Modal.jsx'
-import { AddButton, Container, Header, TierListItem, TierListName } from './Home.styles.js' // Import Axios for API calls
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import {
+	AddButton,
+	Container,
+	Header,
+	TierListContainer,
+	TierListItem,
+	TierListName,
+} from './Home.styles.js';
 
 const Home = () => {
-	// const [isModalOpen, setIsModalOpen] = useState(false) // State to manage modal visibility
-	const [tierLists, setTierLists] = useState([]) // Store fetched tier lists
+	const [tierLists, setTierLists] = useState([]);
+	const navigate = useNavigate(); // Initialize navigation hook
+
 	useEffect(() => {
 		const fetchTierLists = async () => {
 			try {
-				const response = await axios.get('/api/tierlist') // Adjust the endpoint if necessary
-				setTierLists(response.data.data) // Assuming the API returns an array in `data.data`
-
+				const response = await axios.get('/api/tierlist');
+				setTierLists(response.data.data);
 			} catch (error) {
-				console.error('Error fetching tier lists:', error)
+				console.error('Error fetching tier lists:', error);
 			}
-		}
-		fetchTierLists()
-	}, [])
+		};
+		fetchTierLists();
+	}, []);
 
 	return (
-		<Container>
-			<Header>Tier Lists</Header>
-			<AddButton onClick={() => setIsModalOpen(true)}>Add New Tier List</AddButton>
-			<TierListItem>
-				{tierLists.map((tierList) => (
-					<TierListName key={tierList._id}>
-						<Link to={`/tierlist/${tierList._id}`}>
-							<h3>{tierList.name}</h3>
-						</Link>
-					</TierListName>
-				))}
-			</TierListItem>
-		</Container>
-	)
-}
+		<div>
+			<Header>Guild Tier Lists</Header>
+			<TierListContainer>
+				{tierLists.length === 0 ? (
+					<p>No tier lists available. Please create one.</p> // Display this message if no tier lists are present
+				) : (
+					tierLists.map((tierList) => (
+						<TierListItem key={tierList._id}>
+							<Link to={`/tierlist/${tierList._id}`}>
+								<TierListName>{tierList.name}</TierListName>
+							</Link>
+						</TierListItem>
+					))
+				)}
+			</TierListContainer>
+			<AddButton onClick={() => navigate('/add-tierlist')}>Add New Tier List</AddButton>
+		</div>
+	);
+};
 
-export default Home
+export default Home;

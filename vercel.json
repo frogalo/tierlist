@@ -12,16 +12,16 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/.robo/build/api/$1"
+      "src": "/api/tierList/getAll",
+      "dest": "/.robo/build/api/tierList/getAll.js"
+    },
+    {
+      "src": "/api/tierList/create",
+      "dest": "/.robo/build/api/tierList/create.js"
     },
     {
       "src": "/static/(.*)",
       "dest": "/.robo/public/$1"
-    },
-    {
-      "src": "/(.*)\\.png",
-      "dest": "/.robo/public/$1.png"
     },
     {
       "src": "/(.*)",

@@ -10,18 +10,7 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/tierlist/(.*)",
-      "destination": "/.robo/build/api/tierList/$1"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "/.robo/build/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/.robo/public/$1"
-    }
+  "routes": [
+    { "src": "/[^.]+", "dest": "/", "status": 200 }
   ]
 }

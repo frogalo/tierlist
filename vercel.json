@@ -12,7 +12,7 @@
   ],
   "routes": [
     {
-      "src": "build/api/(.*)",
+      "src": "/api/(.*)",
       "dest": "/build/api/$1"
     },
     {

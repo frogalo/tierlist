@@ -11,6 +11,21 @@
     }
   ],
   "routes": [
-    { "src": "/[^.]+", "dest": "/", "status": 200 }
+    {
+      "src": "/api/(.*)",
+      "dest": "/.robo/build/api/$1"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/.robo/public/$1"
+    },
+    {
+      "src": "/(.*)\\.png",
+      "dest": "/.robo/public/$1.png"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/.robo/public/$1"
+    }
   ]
 }

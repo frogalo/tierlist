@@ -12,6 +12,10 @@
   ],
   "routes": [
     {
+      "src": "/tierlist/(.*)",
+      "dest": "/.robo/build/api/tierList/$1"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/.robo/build/api/$1"
     },

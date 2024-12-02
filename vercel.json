@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "build/api/**/*.js",
+      "src": ".robo/build/api/**/*.js",
       "use": "@vercel/node"
     },
     {
@@ -13,7 +13,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/build/api/$1"
+      "dest": "/.robo/build/api/$1"
     },
     {
       "src": "/(.*)",

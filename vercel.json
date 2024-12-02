@@ -18,6 +18,9 @@
     {
       "src": "/(.*)",
       "dest": "/.robo/public/$1"
+    },
+    {
+      "cleanUrls": true
     }
   ]
 }

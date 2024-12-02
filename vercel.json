@@ -9,5 +9,18 @@
       "src": ".robo/public/**/*",
       "use": "@vercel/static"
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/build/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/.robo/public/$1"
+    },
+    {
+      "cleanUrls": true
+    }
   ]
 }

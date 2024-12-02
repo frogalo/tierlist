@@ -10,14 +10,20 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "/build/api/:path*"
+      "src": "build/api/(.*)",
+      "dest": "/build/api/$1"
     },
     {
-      "source": "/:path*",
-      "destination": "/public/:path*"
+      "src": "/(.*)",
+      "dest": "/public/$1"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ]
 }
